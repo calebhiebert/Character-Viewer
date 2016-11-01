@@ -4,20 +4,22 @@ using System.Collections;
 public class Character
 {
     public delegate void HpUpdated(int hp);
-
     public event HpUpdated OnHpChange;
 
     public delegate void MaxHpUpdated(int maxHp);
-
     public event MaxHpUpdated OnMaxHpChange;
 
     public delegate void NameUpdated(string name);
-
     public event NameUpdated OnNameChange;
 
     public delegate void GuildLeaderUpdated(bool isLeader);
-
     public event GuildLeaderUpdated OnGuildLeaderStatausChange;
+
+    public delegate void AcUpdated(int ac);
+    public event AcUpdated OnAcChanged;
+
+    public delegate void ReUpdated(int re);
+    public event ReUpdated OnReChanged;
 
     private uint _charId;
     private uint _ownerId;
@@ -64,6 +66,12 @@ public class Character
 
         if (newData.GuildLeader != _guildLeader)
             GuildLeader = newData.GuildLeader;
+
+        if (newData.Ac != _ac)
+            Ac = newData.Ac;
+
+        if (newData.Re != _re)
+            Re = newData.Re;
     }
 
     public bool GuildLeader
@@ -98,7 +106,12 @@ public class Character
     public int Ac
     {
         get { return _ac; }
-        set { _ac = value; }
+        set
+        {
+            _ac = value;
+            if (OnAcChanged != null)
+                OnAcChanged(value);
+        }
     }
 
     public int Gold
@@ -138,7 +151,12 @@ public class Character
     public int Re
     {
         get { return _re; }
-        set { _re = value; }
+        set
+        {
+            _re = value;
+            if (OnReChanged != null)
+                OnReChanged(value);
+        }
     }
 
     public int Xp

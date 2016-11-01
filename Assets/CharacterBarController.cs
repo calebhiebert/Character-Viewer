@@ -9,9 +9,26 @@ public class CharacterBarController : MonoBehaviour
 
     [SerializeField] private Image _healthBar;
 
+    [SerializeField] private Image _healthBarEffects;
+
     [SerializeField] private Text _healthText;
 
     [SerializeField] private Image _leaderBadge;
+
+    private float _hpFillTarget;
+
+    void Update()
+    {
+        if (_healthBar.fillAmount < _hpFillTarget)
+        {
+            _healthBar.fillAmount = Mathf.Lerp(_healthBar.fillAmount, _hpFillTarget, Time.deltaTime*12);
+            _healthBarEffects.fillAmount = _hpFillTarget;
+        } else if (_healthBar.fillAmount > _hpFillTarget)
+        {
+            _healthBarEffects.fillAmount = Mathf.Lerp(_healthBar.fillAmount, _hpFillTarget, Time.deltaTime*12);
+            _healthBar.fillAmount = _hpFillTarget;
+        }
+    }
 
     void Start()
     {
@@ -29,7 +46,7 @@ public class CharacterBarController : MonoBehaviour
     private void UpdateFromCharacter()
     {
         _name.text = _character.Name;
-        _healthBar.fillAmount = (float) _character.Hp/_character.MaxHp;
+        _hpFillTarget = (float) _character.Hp/_character.MaxHp;
         _healthText.text = _character.Hp + "/" + _character.MaxHp;
         _leaderBadge.enabled = _character.GuildLeader;
     }

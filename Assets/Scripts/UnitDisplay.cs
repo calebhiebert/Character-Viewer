@@ -25,7 +25,6 @@ public class UnitDisplay : MonoBehaviour
 
     private float _lastUpdate = 0;
 
-	// Use this for initialization
 	void Start () {
         _activeBars = new List<GameObject>();
 	    StartCoroutine(UpdateGuildInfo());
@@ -43,6 +42,12 @@ public class UnitDisplay : MonoBehaviour
 
     private void Populate(List<Character> characters)
     {
+        if (characters == null)
+        {
+            GuildNameText.text = "Error!";
+            return;
+        }
+
         var newCharacters = new List<Character>();
 
         foreach (var character in characters)
@@ -79,29 +84,48 @@ public class UnitDisplay : MonoBehaviour
         }
     }
 
-    IEnumerator GetCharacters()
+    private IEnumerator GetCharacters()
     {
         string url = string.Format("{0}/guild/{1}/characters", svrAddr, guildId);
 
         WWW www = new WWW(url);
         yield return www;
 
-        Populate(JsonConvert.DeserializeObject<List<Character>>(www.text));
+        if (www.error == null)
+        {
+            var chars = JsonConvert.DeserializeObject<List<Character>>(www.text);
+
+            if(chars != null)
+                Populate(chars);
+            else
+                Debug.LogError("Character parsing error");
+        }
     }
 
-    IEnumerator UpdateGuildInfo()
+    private IEnumerator UpdateGuildInfo()
     {
         string url = string.Format("{0}/guild/{1}", svrAddr, guildId);
 
-        WWW www = new WWW(url);
+        var www = new WWW(url);
 
         yield return www;
 
-        _guild = JsonConvert.DeserializeObject<Guild>(www.text);
-
-        if (_guild != null)
+        if(www.error == null)
         {
-            GuildNameText.text = _guild.GuildName;
+            _guild = JsonConvert.DeserializeObject<Guild>(www.text);
+
+            if (_guild != null)
+            {
+                GuildNameText.text = _guild.GuildName;
+            }
+            else
+            {
+                Debug.LogError("Guild parsing error!");
+            }
+        }
+        else
+        {
+            Debug.LogError(www.error);
         }
     }
 }
