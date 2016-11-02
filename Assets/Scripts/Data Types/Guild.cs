@@ -6,16 +6,18 @@ public class Guild
     private uint guildId;
     private string guildName;
     private uint leader;
+    private string location;
 
     public Guild()
     {
     }
 
-    public Guild(uint guildId, string guildName, uint leader)
+    public Guild(uint guildId, string guildName, uint leader, string location)
     {
         this.guildId = guildId;
         this.guildName = guildName;
         this.leader = leader;
+        this.location = location;
     }
 
     public uint GuildId
@@ -34,5 +36,11 @@ public class Guild
     {
         get { return leader; }
         set { leader = value; }
+    }
+
+    public string Location
+    {
+        get { return location; }
+        set { location = value; }
     }
 }

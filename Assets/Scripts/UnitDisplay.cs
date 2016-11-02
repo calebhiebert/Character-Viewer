@@ -4,30 +4,23 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts;
 using Newtonsoft.Json;
 
 public class UnitDisplay : MonoBehaviour
 {
-
-    private const string svrAddr = "http://localhost:8080";
-
     public uint guildId;
     public float updateRate = 1;
-
-    public Text GuildNameText;
 
     public GameObject CharBar;
     public float barHeight = 50;
 
     private List<GameObject> _activeBars;
 
-    private Guild _guild;
-
     private float _lastUpdate = 0;
 
 	void Start () {
         _activeBars = new List<GameObject>();
-	    StartCoroutine(UpdateGuildInfo());
 	}
 
     void Update()
@@ -35,7 +28,6 @@ public class UnitDisplay : MonoBehaviour
         if (Time.time - _lastUpdate >= updateRate)
         {
             StartCoroutine(GetCharacters());
-            StartCoroutine(UpdateGuildInfo());
             _lastUpdate = Time.time;
         }
     }
@@ -86,7 +78,7 @@ public class UnitDisplay : MonoBehaviour
 
     private IEnumerator GetCharacters()
     {
-        string url = string.Format("{0}/guild/{1}/characters", svrAddr, guildId);
+        string url = string.Format("{0}/guild/{1}/characters", Rest.ServerAddress, guildId);
 
         WWW www = new WWW(url);
         yield return www;
@@ -99,33 +91,6 @@ public class UnitDisplay : MonoBehaviour
                 Populate(chars);
             else
                 Debug.LogError("Character parsing error");
-        }
-    }
-
-    private IEnumerator UpdateGuildInfo()
-    {
-        string url = string.Format("{0}/guild/{1}", svrAddr, guildId);
-
-        var www = new WWW(url);
-
-        yield return www;
-
-        if(www.error == null)
-        {
-            _guild = JsonConvert.DeserializeObject<Guild>(www.text);
-
-            if (_guild != null)
-            {
-                GuildNameText.text = _guild.GuildName;
-            }
-            else
-            {
-                Debug.LogError("Guild parsing error!");
-            }
-        }
-        else
-        {
-            Debug.LogError(www.error);
         }
     }
 }

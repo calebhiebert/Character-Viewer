@@ -175,7 +175,7 @@ GameObject:
   - 222: {fileID: 222000014148046762}
   - 114: {fileID: 114000012195702424}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Picture
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -224,6 +224,7 @@ MonoBehaviour:
   _healthBarEffects: {fileID: 114000010295963678}
   _healthText: {fileID: 114000012390971878}
   _leaderBadge: {fileID: 114000013309560926}
+  _picture: {fileID: 114000012195702424}
 --- !u!114 &114000011364215518
 MonoBehaviour:
   m_ObjectHideFlags: 1
