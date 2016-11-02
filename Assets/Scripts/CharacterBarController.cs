@@ -18,6 +18,10 @@ public class CharacterBarController : MonoBehaviour
 
     [SerializeField] private Image _picture;
 
+    private Vector2 _targetLocation;
+
+    private RectTransform _transform;
+
     private float _hpFillTarget;
 
     void Update()
@@ -31,10 +35,17 @@ public class CharacterBarController : MonoBehaviour
             _healthBarEffects.fillAmount = Mathf.Lerp(_healthBarEffects.fillAmount, _hpFillTarget, Time.deltaTime*12);
             _healthBar.fillAmount = _hpFillTarget;
         }
+
+        if (_transform.anchoredPosition != _targetLocation)
+        {
+            _transform.anchoredPosition = Vector2.Lerp(_transform.anchoredPosition, _targetLocation, Time.deltaTime * 12);
+        }
     }
 
     void Start()
     {
+        _transform = GetComponent<RectTransform>();
+
         if(_character != null)
             UpdateFromCharacter();
         else
@@ -60,6 +71,12 @@ public class CharacterBarController : MonoBehaviour
     {
         get { return _character; }
         set { _character = value; }
+    }
+
+    public Vector2 TargetLocation
+    {
+        get { return _targetLocation; }
+        set { _targetLocation = value; }
     }
 
     private IEnumerator GetPicture()

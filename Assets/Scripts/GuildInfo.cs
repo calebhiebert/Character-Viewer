@@ -28,6 +28,7 @@ public class GuildInfo : MonoBehaviour
 	    if (Time.time - _lastUpdate > _updateRate)
 	    {
 	        StartCoroutine(UpdateGuildInfo(1));
+	        _lastUpdate = Time.time;
 	    }
 	}
 

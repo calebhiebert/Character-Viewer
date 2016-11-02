@@ -9,6 +9,8 @@ using Newtonsoft.Json;
 
 public class UnitDisplay : MonoBehaviour
 {
+    private static UnitDisplay _display;
+
     public uint guildId;
     public float updateRate = 1;
 
@@ -19,7 +21,9 @@ public class UnitDisplay : MonoBehaviour
 
     private float _lastUpdate = 0;
 
-	void Start () {
+	void Awake()
+	{
+	    _display = this;
         _activeBars = new List<GameObject>();
 	}
 
@@ -32,14 +36,8 @@ public class UnitDisplay : MonoBehaviour
         }
     }
 
-    private void Populate(List<Character> characters)
+    public void Populate(List<Character> characters)
     {
-        if (characters == null)
-        {
-            GuildNameText.text = "Error!";
-            return;
-        }
-
         var newCharacters = new List<Character>();
 
         foreach (var character in characters)
@@ -47,7 +45,7 @@ public class UnitDisplay : MonoBehaviour
 
         foreach (var character in characters)
         {
-            if (_guild != null && _guild.Leader == character.CharId)
+            if (GuildInfo.Guild != null && GuildInfo.Guild.Leader == character.CharId)
                 character.GuildLeader = true;
 
             foreach (var bar in _activeBars)
@@ -72,8 +70,13 @@ public class UnitDisplay : MonoBehaviour
         for (var i = 0; i < _activeBars.Count; i++)
         {
             _activeBars[i].transform.SetParent(transform, false);
-            _activeBars[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(0, (i * -55) - 5);
+            _activeBars[i].GetComponent<CharacterBarController>().TargetLocation = new Vector2(0, (i * -45) - 5);
         }
+    }
+
+    public static void ExecuteCharUpdate(List<Character> characters)
+    {
+        _display.Populate(characters);
     }
 
     private IEnumerator GetCharacters()
