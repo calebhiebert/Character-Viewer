@@ -49,7 +49,7 @@ public class GuildInfo : MonoBehaviour
                 _guildNameText.text = Guild.GuildName;
                 _guildLocationText.text = Guild.Location;
 
-                _locationPanel.SetActive(!Guild.Location.Equals("Unknown"));
+                _locationPanel.SetActive(Guild.Location != null);
             }
             else
             {

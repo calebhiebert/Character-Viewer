@@ -1,9 +1,12 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class CharacterBarController : MonoBehaviour
 {
+    private static List<CharacterBarController> _controllers = new List<CharacterBarController>();
+
     private Character _character;
 
     [SerializeField] private Text _name;
@@ -44,6 +47,8 @@ public class CharacterBarController : MonoBehaviour
 
     void Start()
     {
+        _controllers.Add(this);
+
         _transform = GetComponent<RectTransform>();
 
         if(_character != null)
@@ -51,12 +56,17 @@ public class CharacterBarController : MonoBehaviour
         else
             Debug.LogError("Bar was created with no character!");
 
-        StartCoroutine(GetPicture());
+        //StartCoroutine(GetPicture());
 
         _character.OnNameChange += charName => { _name.text = charName; };
         _character.OnGuildLeaderStatausChange += isLeader => { UpdateFromCharacter(); };
         _character.OnHpChange += hp => { UpdateFromCharacter(); };
         _character.OnMaxHpChange += maxHp => { UpdateFromCharacter(); };
+    }
+
+    void OnDestroy()
+    {
+        _controllers.Remove(this);
     }
 
     private void UpdateFromCharacter()
@@ -92,5 +102,10 @@ public class CharacterBarController : MonoBehaviour
 
             _picture.sprite = sprite;
         }
+    }
+
+    public static List<CharacterBarController> Controllers
+    {
+        get { return _controllers; }
     }
 }
