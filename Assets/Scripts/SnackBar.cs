@@ -31,18 +31,6 @@ public class SnackBar : MonoBehaviour
             _panelImage.color = new Color(_panelImage.color.r, _panelImage.color.g, _panelImage.color.b, color.a);
             _text.color = color;
         }
-
-        if (Input.GetKeyDown(KeyCode.Minus) || Input.GetKeyDown(KeyCode.KeypadMinus))
-        {
-            var controller = BarSelector.CurrentlySelected.GetComponent<CharacterBarController>();
-
-            
-        }
-
-        if (Input.GetKeyDown(KeyCode.Plus) || Input.GetKeyDown(KeyCode.KeypadPlus))
-        {
-
-        }
     }
 
     public static void ShowMessage(string message, float duration = 2.5f)
